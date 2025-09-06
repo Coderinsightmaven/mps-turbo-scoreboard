@@ -26,7 +26,6 @@ export class ScoreboardsService implements OnModuleInit {
       this.scoreboards = [
         { id: this.generateRandomId(), name: 'Stadium Scoreboard' },
         { id: this.generateRandomId(), name: 'Grandstand Scoreboard' },
-        { id: this.generateRandomId(), name: 'Center Court Scoreboard' },
       ];
       await this.saveScoreboardsToFile();
     }

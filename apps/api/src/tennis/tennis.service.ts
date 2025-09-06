@@ -40,6 +40,11 @@ export class TennisService implements OnModuleInit {
   }
 
   async create(matchData: CreateTennisMatchData): Promise<TennisMatch> {
+    // Clean up old matches for the same scoreboard before creating new one
+    if (matchData.scoreboardId) {
+      await this.cleanupOldMatches(matchData.scoreboardId);
+    }
+
     const newMatch: TennisMatch = {
       ...matchData,
       id: (this.matches.length + 1).toString(),
@@ -59,10 +64,31 @@ export class TennisService implements OnModuleInit {
         ...matchData,
         updatedAt: new Date(),
       };
+
+      // Clean up old matches for the same scoreboard after update
+      if (matchData.scoreboardId) {
+        await this.cleanupOldMatches(matchData.scoreboardId, id);
+      }
+
       await this.saveMatchesToFile();
       return this.matches[index];
     }
     return null;
+  }
+
+  private async cleanupOldMatches(scoreboardId: string, excludeId?: string): Promise<void> {
+    // Keep only the most recent match for each scoreboard
+    const scoreboardMatches = this.matches
+      .filter(match => match.scoreboardId === scoreboardId)
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+    if (scoreboardMatches.length > 1) {
+      // Remove all but the most recent match for this scoreboard
+      const matchesToRemove = scoreboardMatches.slice(1);
+      this.matches = this.matches.filter(match =>
+        !matchesToRemove.some(removeMatch => removeMatch.id === match.id)
+      );
+    }
   }
 
   async delete(id: string): Promise<boolean> {

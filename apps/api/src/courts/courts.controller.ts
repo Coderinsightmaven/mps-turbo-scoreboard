@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Delete, Param, Query, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Query, Body, UseGuards } from '@nestjs/common';
 import { CourtsService } from './courts.service';
 import type { Court } from './court.interface';
+import { ApiKeyGuard } from '../auth/api-key.guard';
 
 @Controller('courts')
+@UseGuards(ApiKeyGuard)
 export class CourtsController {
   constructor(private readonly courtsService: CourtsService) {}
 

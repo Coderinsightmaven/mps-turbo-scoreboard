@@ -25,6 +25,11 @@ export class TennisController {
 
   @Post()
   async create(@Body() matchData: any): Promise<TennisMatch> {
+    // Validate required scoreboardId
+    if (!matchData.scoreboardId) {
+      throw new Error('scoreboardId is required');
+    }
+
     // Transform the incoming payload to match our interface
     const transformedData = {
       scoreStringSide1: matchData.scoreStringSide1,
@@ -44,7 +49,7 @@ export class TennisController {
       },
       player1Name: matchData.player1Name,
       player2Name: matchData.player2Name,
-      scoreboardId: matchData.scoreboardId || matchData.courtId,
+      scoreboardId: matchData.scoreboardId,
     };
 
     return this.tennisService.create(transformedData);
@@ -52,6 +57,11 @@ export class TennisController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() matchData: any): Promise<TennisMatch | null> {
+    // Validate required scoreboardId
+    if (!matchData.scoreboardId) {
+      throw new Error('scoreboardId is required');
+    }
+
     const transformedData = {
       scoreStringSide1: matchData.scoreStringSide1,
       scoreStringSide2: matchData.scoreStringSide2,
@@ -70,7 +80,7 @@ export class TennisController {
       },
       player1Name: matchData.player1Name,
       player2Name: matchData.player2Name,
-      scoreboardId: matchData.scoreboardId || matchData.courtId,
+      scoreboardId: matchData.scoreboardId,
     };
 
     return this.tennisService.update(id, transformedData);

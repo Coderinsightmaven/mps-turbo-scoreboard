@@ -6,7 +6,7 @@ import * as path from 'path';
 @Injectable()
 export class ScoreboardsService implements OnModuleInit {
   private scoreboards: Scoreboard[] = [];
-  private readonly dataFile = path.join(process.cwd(), 'scoreboards-data.json');
+  private readonly dataFile = path.join(process.cwd(), 'data', 'scoreboards-data.json');
 
   async onModuleInit() {
     await this.loadScoreboardsFromFile();
@@ -24,9 +24,9 @@ export class ScoreboardsService implements OnModuleInit {
     } catch (error) {
       // If file doesn't exist, initialize with default data
       this.scoreboards = [
-        { id: '1', name: 'Scoreboard 1' },
-        { id: '2', name: 'Scoreboard 2' },
-        { id: '3', name: 'Scoreboard 3' },
+        { id: this.generateRandomId(), name: 'Stadium Scoreboard' },
+        { id: this.generateRandomId(), name: 'Grandstand Scoreboard' },
+        { id: this.generateRandomId(), name: 'Center Court Scoreboard' },
       ];
       await this.saveScoreboardsToFile();
     }
@@ -48,9 +48,19 @@ export class ScoreboardsService implements OnModuleInit {
     return this.scoreboards.find(scoreboard => scoreboard.id === id);
   }
 
+  private generateRandomId(): string {
+    // Generate a random 8-character alphanumeric ID
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
   async create(scoreboardName: string): Promise<Scoreboard> {
     const newScoreboard: Scoreboard = {
-      id: (this.scoreboards.length + 1).toString(),
+      id: this.generateRandomId(),
       name: scoreboardName,
     };
     this.scoreboards.push(newScoreboard);

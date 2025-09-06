@@ -6,7 +6,7 @@ import * as path from 'path';
 @Injectable()
 export class TennisService implements OnModuleInit {
   private matches: TennisMatch[] = [];
-  private readonly dataFile = path.join(process.cwd(), 'tennis-matches-data.json');
+  private readonly dataFile = path.join(process.cwd(), 'data', 'tennis-matches-data.json');
 
   async onModuleInit() {
     await this.loadMatchesFromFile();

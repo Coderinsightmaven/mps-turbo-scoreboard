@@ -17,7 +17,7 @@ export interface TennisMatch {
   };
   player1Name?: string;
   player2Name?: string;
-  scoreboardId?: string;
+  scoreboardId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,5 +40,5 @@ export interface CreateTennisMatchData {
   };
   player1Name?: string;
   player2Name?: string;
-  scoreboardId?: string;
+  scoreboardId: string;
 }

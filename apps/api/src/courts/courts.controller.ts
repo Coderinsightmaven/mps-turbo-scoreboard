@@ -25,13 +25,13 @@ export class CourtsController {
   }
 
   @Post()
-  create(@Body() courtData: Omit<Court, 'id' | 'createdAt' | 'updatedAt'>): Court {
+  async create(@Body() courtData: Omit<Court, 'id' | 'createdAt' | 'updatedAt'>): Promise<Court> {
     return this.courtsService.create(courtData);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): { success: boolean; message: string } {
-    const success = this.courtsService.delete(id);
+  async delete(@Param('id') id: string): Promise<{ success: boolean; message: string }> {
+    const success = await this.courtsService.delete(id);
     return {
       success,
       message: success ? 'Court deleted successfully' : 'Court not found'

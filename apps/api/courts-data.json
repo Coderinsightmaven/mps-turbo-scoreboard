@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Stadium",
+    "location": "",
+    "status": "available",
+    "type": "indoor",
+    "capacity": 4,
+    "id": "1",
+    "createdAt": "2025-09-06T16:12:25.662Z",
+    "updatedAt": "2025-09-06T16:12:25.662Z"
+  }
+]

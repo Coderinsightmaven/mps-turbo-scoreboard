@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "com.liammarincik.desktop",
   "build": {
-    "beforeDevCommand": "yarn dev",
+    "beforeDevCommand": "yarn dev:vite",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "yarn build",
     "frontendDist": "../dist"

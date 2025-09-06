@@ -1,49 +1,103 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
+import { useState, useEffect } from "react";
+import { Court, CreateCourtData } from "./types";
+import { ApiService } from "./api";
+import { CourtList } from "./components/CourtList";
+import { CourtForm } from "./components/CourtForm";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [courts, setCourts] = useState<Court[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  const fetchCourts = async () => {
+    try {
+      setError(null);
+      const data = await ApiService.getCourts();
+      setCourts(data);
+    } catch (err) {
+      setError('Failed to fetch courts. Make sure the API is running.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourts();
+  }, []);
+
+  const handleCreateCourt = async (courtData: CreateCourtData) => {
+    try {
+      await ApiService.createCourt(courtData);
+      await fetchCourts(); // Refresh the list
+      setShowForm(false);
+    } catch (err) {
+      setError('Failed to create court');
+    }
+  };
+
+  const handleDeleteCourt = async (id: string) => {
+    try {
+      setDeletingId(id);
+      await ApiService.deleteCourt(id);
+      await fetchCourts(); // Refresh the list
+    } catch (err) {
+      setError('Failed to delete court');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <main className="container">
+        <h1>Court Management System</h1>
+        <p>Loading courts...</p>
+      </main>
+    );
   }
 
   return (
     <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+      <h1>Court Management System</h1>
 
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
+      {error && (
+        <div className="error-message">
+          <p>{error}</p>
+          <button onClick={() => setError(null)}>Dismiss</button>
+        </div>
+      )}
 
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
+      <div className="courts-section">
+        <div className="section-header">
+          <h2>All Courts ({courts.length})</h2>
+          <button
+            onClick={() => setShowForm(true)}
+            className="create-btn"
+          >
+            Add New Court
+          </button>
+        </div>
+
+        <CourtList
+          courts={courts}
+          onDelete={handleDeleteCourt}
+          isDeleting={deletingId}
         />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+      </div>
+
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <CourtForm
+              onSubmit={handleCreateCourt}
+              onCancel={() => setShowForm(false)}
+            />
+          </div>
+        </div>
+      )}
     </main>
   );
 }

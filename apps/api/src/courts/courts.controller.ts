@@ -1,6 +1,6 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Query, Body } from '@nestjs/common';
 import { CourtsService } from './courts.service';
-import { Court } from './court.interface';
+import type { Court } from './court.interface';
 
 @Controller('courts')
 export class CourtsController {
@@ -20,5 +20,19 @@ export class CourtsController {
   @Get(':id')
   findOne(@Param('id') id: string): Court | undefined {
     return this.courtsService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() courtData: Omit<Court, 'id' | 'createdAt' | 'updatedAt'>): Court {
+    return this.courtsService.create(courtData);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string): { success: boolean; message: string } {
+    const success = this.courtsService.delete(id);
+    return {
+      success,
+      message: success ? 'Court deleted successfully' : 'Court not found'
+    };
   }
 }

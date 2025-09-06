@@ -51,4 +51,24 @@ export class CourtsService {
   findByType(type: string): Court[] {
     return this.courts.filter(court => court.type === type);
   }
+
+  create(courtData: Omit<Court, 'id' | 'createdAt' | 'updatedAt'>): Court {
+    const newCourt: Court = {
+      ...courtData,
+      id: (this.courts.length + 1).toString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.courts.push(newCourt);
+    return newCourt;
+  }
+
+  delete(id: string): boolean {
+    const index = this.courts.findIndex(court => court.id === id);
+    if (index !== -1) {
+      this.courts.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
 }

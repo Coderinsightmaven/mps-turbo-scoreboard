@@ -1,0 +1,37 @@
+[
+  {
+    "scoreStringSide1": "6-1 2-6 5-1 (0-0)",
+    "scoreStringSide2": "1-6 6-2 1-5 (0-0)",
+    "side1PointScore": "0",
+    "side2PointScore": "0",
+    "sets": [
+      {
+        "setNumber": 1,
+        "side1Score": 6,
+        "side2Score": 1,
+        "winningSide": 1
+      },
+      {
+        "setNumber": 2,
+        "side1Score": 2,
+        "side2Score": 6,
+        "winningSide": 2
+      },
+      {
+        "setNumber": 3,
+        "side1Score": 5,
+        "side2Score": 1
+      }
+    ],
+    "server": {
+      "sideNumber": 2,
+      "playerNumber": 1,
+      "returningSide": "DEUCE"
+    },
+    "player1Name": "Player 1",
+    "player2Name": "Player 2",
+    "id": "1",
+    "createdAt": "2025-09-06T16:37:20.507Z",
+    "updatedAt": "2025-09-06T16:37:20.507Z"
+  }
+]

@@ -1,8 +1,8 @@
-export interface Court {
+export interface Scoreboard {
   id: string;
   name: string;
 }
 
-export interface CreateCourtData {
+export interface CreateScoreboardData {
   name: string;
 }

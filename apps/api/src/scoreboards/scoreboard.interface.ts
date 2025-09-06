@@ -1,4 +1,4 @@
-export interface Court {
+export interface Scoreboard {
   id: string;
   name: string;
 }

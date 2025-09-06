@@ -1,4 +1,4 @@
-import { Court, CreateCourtData } from './types';
+import { Scoreboard, CreateScoreboardData } from './types';
 
 const API_BASE_URL = 'http://localhost:3000';
 const API_KEY = 'dev-api-key-12345'; // Same as the default in the guard
@@ -11,35 +11,35 @@ export class ApiService {
     };
   }
 
-  static async getCourts(): Promise<Court[]> {
-    const response = await fetch(`${API_BASE_URL}/courts`, {
+  static async getScoreboards(): Promise<Scoreboard[]> {
+    const response = await fetch(`${API_BASE_URL}/scoreboards`, {
       headers: this.getHeaders(),
     });
     if (!response.ok) {
-      throw new Error('Failed to fetch courts');
+      throw new Error('Failed to fetch scoreboards');
     }
     return response.json();
   }
 
-  static async createCourt(courtData: CreateCourtData): Promise<Court> {
-    const response = await fetch(`${API_BASE_URL}/courts`, {
+  static async createScoreboard(scoreboardData: CreateScoreboardData): Promise<Scoreboard> {
+    const response = await fetch(`${API_BASE_URL}/scoreboards`, {
       method: 'POST',
       headers: this.getHeaders(),
-      body: JSON.stringify(courtData),
+      body: JSON.stringify(scoreboardData),
     });
     if (!response.ok) {
-      throw new Error('Failed to create court');
+      throw new Error('Failed to create scoreboard');
     }
     return response.json();
   }
 
-  static async deleteCourt(id: string): Promise<{ success: boolean; message: string }> {
-    const response = await fetch(`${API_BASE_URL}/courts/${id}`, {
+  static async deleteScoreboard(id: string): Promise<{ success: boolean; message: string }> {
+    const response = await fetch(`${API_BASE_URL}/scoreboards/${id}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
     if (!response.ok) {
-      throw new Error('Failed to delete court');
+      throw new Error('Failed to delete scoreboard');
     }
     return response.json();
   }

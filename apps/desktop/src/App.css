@@ -40,7 +40,7 @@ h1 {
   align-items: center;
 }
 
-.courts-section {
+.scoreboards-section {
   flex: 1;
 }
 
@@ -70,13 +70,13 @@ h1 {
   background-color: #229954;
 }
 
-.courts-grid {
+.scoreboards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-.court-card {
+.scoreboard-card {
   background: white;
   border-radius: 8px;
   padding: 20px;
@@ -84,34 +84,25 @@ h1 {
   border: 1px solid #ddd;
 }
 
-.court-header {
+.scoreboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
 }
 
-.court-header h4 {
+.scoreboard-header h4 {
   margin: 0;
   color: #2c3e50;
 }
 
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 12px;
-  color: white;
-  font-size: 0.8em;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.court-details p {
+.scoreboard-details p {
   margin: 8px 0;
   color: #555;
   font-size: 0.9em;
 }
 
-.court-actions {
+.scoreboard-actions {
   margin-top: 15px;
   text-align: right;
 }
@@ -161,7 +152,7 @@ h1 {
 }
 
 /* Form Styles */
-.court-form h3 {
+.scoreboard-form h3 {
   margin-top: 0;
   margin-bottom: 20px;
   color: #2c3e50;

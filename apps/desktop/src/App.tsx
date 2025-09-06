@@ -1,50 +1,50 @@
 import { useState, useEffect } from "react";
-import { Court, CreateCourtData } from "./types";
+import { Scoreboard, CreateScoreboardData } from "./types";
 import { ApiService } from "./api";
-import { CourtList } from "./components/CourtList";
-import { CourtForm } from "./components/CourtForm";
+import { ScoreboardList } from "./components/ScoreboardList";
+import { ScoreboardForm } from "./components/ScoreboardForm";
 import "./App.css";
 
 function App() {
-  const [courts, setCourts] = useState<Court[]>([]);
+  const [scoreboards, setScoreboards] = useState<Scoreboard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchCourts = async () => {
+  const fetchScoreboards = async () => {
     try {
       setError(null);
-      const data = await ApiService.getCourts();
-      setCourts(data);
+      const data = await ApiService.getScoreboards();
+      setScoreboards(data);
     } catch (err) {
-      setError('Failed to fetch courts. Make sure the API is running.');
+      setError('Failed to fetch scoreboards. Make sure the API is running.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCourts();
+    fetchScoreboards();
   }, []);
 
-  const handleCreateCourt = async (courtData: CreateCourtData) => {
+  const handleCreateScoreboard = async (scoreboardData: CreateScoreboardData) => {
     try {
-      await ApiService.createCourt(courtData);
-      await fetchCourts(); // Refresh the list
+      await ApiService.createScoreboard(scoreboardData);
+      await fetchScoreboards(); // Refresh the list
       setShowForm(false);
     } catch (err) {
-      setError('Failed to create court');
+      setError('Failed to create scoreboard');
     }
   };
 
-  const handleDeleteCourt = async (id: string) => {
+  const handleDeleteScoreboard = async (id: string) => {
     try {
       setDeletingId(id);
-      await ApiService.deleteCourt(id);
-      await fetchCourts(); // Refresh the list
+      await ApiService.deleteScoreboard(id);
+      await fetchScoreboards(); // Refresh the list
     } catch (err) {
-      setError('Failed to delete court');
+      setError('Failed to delete scoreboard');
     } finally {
       setDeletingId(null);
     }
@@ -53,15 +53,15 @@ function App() {
   if (loading) {
     return (
       <main className="container">
-        <h1>Court Management System</h1>
-        <p>Loading courts...</p>
+        <h1>Scoreboard Management System</h1>
+        <p>Loading scoreboards...</p>
       </main>
     );
   }
 
   return (
     <main className="container">
-      <h1>Court Management System</h1>
+      <h1>Scoreboard Management System</h1>
 
       {error && (
         <div className="error-message">
@@ -70,20 +70,20 @@ function App() {
         </div>
       )}
 
-      <div className="courts-section">
+      <div className="scoreboards-section">
         <div className="section-header">
-          <h2>All Courts ({courts.length})</h2>
+          <h2>All Scoreboards ({scoreboards.length})</h2>
           <button
             onClick={() => setShowForm(true)}
             className="create-btn"
           >
-            Add New Court
+            Add New Scoreboard
           </button>
         </div>
 
-        <CourtList
-          courts={courts}
-          onDelete={handleDeleteCourt}
+        <ScoreboardList
+          scoreboards={scoreboards}
+          onDelete={handleDeleteScoreboard}
           isDeleting={deletingId}
         />
       </div>
@@ -91,8 +91,8 @@ function App() {
       {showForm && (
         <div className="modal-overlay">
           <div className="modal">
-            <CourtForm
-              onSubmit={handleCreateCourt}
+            <ScoreboardForm
+              onSubmit={handleCreateScoreboard}
               onCancel={() => setShowForm(false)}
             />
           </div>

@@ -9,13 +9,7 @@ export class CourtsController {
   constructor(private readonly courtsService: CourtsService) {}
 
   @Get()
-  findAll(@Query('status') status?: string, @Query('type') type?: string): Court[] {
-    if (status) {
-      return this.courtsService.findByStatus(status);
-    }
-    if (type) {
-      return this.courtsService.findByType(type);
-    }
+  findAll(): Court[] {
     return this.courtsService.findAll();
   }
 
@@ -25,8 +19,8 @@ export class CourtsController {
   }
 
   @Post()
-  async create(@Body() courtData: Omit<Court, 'id' | 'createdAt' | 'updatedAt'>): Promise<Court> {
-    return this.courtsService.create(courtData);
+  async create(@Body() body: { name: string }): Promise<Court> {
+    return this.courtsService.create(body.name);
   }
 
   @Delete(':id')

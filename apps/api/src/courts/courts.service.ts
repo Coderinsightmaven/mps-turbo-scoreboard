@@ -15,40 +15,18 @@ export class CourtsService implements OnModuleInit {
   private async loadCourtsFromFile() {
     try {
       const data = await fs.readFile(this.dataFile, 'utf-8');
-      this.courts = JSON.parse(data);
+      const parsedData = JSON.parse(data);
+      // Migrate existing data to simplified format if needed
+      this.courts = parsedData.map((court: any, index: number) => ({
+        id: court.id || (index + 1).toString(),
+        name: court.name || court.courtname || `Court ${index + 1}`
+      }));
     } catch (error) {
       // If file doesn't exist, initialize with default data
       this.courts = [
-        {
-          id: '1',
-          name: 'Court A',
-          location: 'Main Building',
-          status: 'available',
-          type: 'indoor',
-          capacity: 4,
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-01'),
-        },
-        {
-          id: '2',
-          name: 'Court B',
-          location: 'Main Building',
-          status: 'occupied',
-          type: 'indoor',
-          capacity: 4,
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-15'),
-        },
-        {
-          id: '3',
-          name: 'Outdoor Court 1',
-          location: 'Backyard',
-          status: 'available',
-          type: 'outdoor',
-          capacity: 2,
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-01'),
-        },
+        { id: '1', name: 'Court A' },
+        { id: '2', name: 'Court B' },
+        { id: '3', name: 'Court C' },
       ];
       await this.saveCourtsToFile();
     }
@@ -70,20 +48,11 @@ export class CourtsService implements OnModuleInit {
     return this.courts.find(court => court.id === id);
   }
 
-  findByStatus(status: string): Court[] {
-    return this.courts.filter(court => court.status === status);
-  }
 
-  findByType(type: string): Court[] {
-    return this.courts.filter(court => court.type === type);
-  }
-
-  async create(courtData: Omit<Court, 'id' | 'createdAt' | 'updatedAt'>): Promise<Court> {
+  async create(courtName: string): Promise<Court> {
     const newCourt: Court = {
-      ...courtData,
       id: (this.courts.length + 1).toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      name: courtName,
     };
     this.courts.push(newCourt);
     await this.saveCourtsToFile();

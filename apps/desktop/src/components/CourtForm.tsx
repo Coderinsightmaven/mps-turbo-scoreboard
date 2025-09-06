@@ -7,40 +7,22 @@ interface CourtFormProps {
 }
 
 export const CourtForm: React.FC<CourtFormProps> = ({ onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState<CreateCourtData>({
-    name: '',
-    location: '',
-    status: 'available',
-    type: 'indoor',
-    capacity: 4,
-  });
+  const [courtName, setCourtName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!courtName.trim()) return;
+
     setIsSubmitting(true);
     try {
-      await onSubmit(formData);
-      setFormData({
-        name: '',
-        location: '',
-        status: 'available',
-        type: 'indoor',
-        capacity: 4,
-      });
+      await onSubmit({ name: courtName.trim() });
+      setCourtName('');
     } catch (error) {
       console.error('Failed to create court:', error);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'capacity' ? parseInt(value) || 0 : value,
-    }));
   };
 
   return (
@@ -52,66 +34,15 @@ export const CourtForm: React.FC<CourtFormProps> = ({ onSubmit, onCancel }) => {
         <input
           type="text"
           id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
+          value={courtName}
+          onChange={(e) => setCourtName(e.target.value)}
+          placeholder="Enter court name"
           required
         />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="location">Location:</label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          value={formData.location}
-          onChange={handleInputChange}
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="type">Type:</label>
-        <select
-          id="type"
-          name="type"
-          value={formData.type}
-          onChange={handleInputChange}
-        >
-          <option value="indoor">Indoor</option>
-          <option value="outdoor">Outdoor</option>
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="status">Status:</label>
-        <select
-          id="status"
-          name="status"
-          value={formData.status}
-          onChange={handleInputChange}
-        >
-          <option value="available">Available</option>
-          <option value="occupied">Occupied</option>
-          <option value="maintenance">Maintenance</option>
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="capacity">Capacity:</label>
-        <input
-          type="number"
-          id="capacity"
-          name="capacity"
-          value={formData.capacity}
-          onChange={handleInputChange}
-          min="1"
-          max="20"
-        />
-      </div>
-
       <div className="form-actions">
-        <button type="submit" disabled={isSubmitting}>
+        <button type="submit" disabled={isSubmitting || !courtName.trim()}>
           {isSubmitting ? 'Creating...' : 'Create Court'}
         </button>
         <button type="button" onClick={onCancel}>

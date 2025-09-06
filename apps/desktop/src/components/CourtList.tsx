@@ -8,22 +8,6 @@ interface CourtListProps {
 }
 
 export const CourtList: React.FC<CourtListProps> = ({ courts, onDelete, isDeleting }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'available':
-        return '#4CAF50';
-      case 'occupied':
-        return '#FF9800';
-      case 'maintenance':
-        return '#F44336';
-      default:
-        return '#9E9E9E';
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
 
   return (
     <div className="courts-list">
@@ -36,20 +20,6 @@ export const CourtList: React.FC<CourtListProps> = ({ courts, onDelete, isDeleti
             <div key={court.id} className="court-card">
               <div className="court-header">
                 <h4>{court.name}</h4>
-                <span
-                  className="status-badge"
-                  style={{ backgroundColor: getStatusColor(court.status) }}
-                >
-                  {court.status}
-                </span>
-              </div>
-
-              <div className="court-details">
-                <p><strong>Location:</strong> {court.location || 'Not specified'}</p>
-                <p><strong>Type:</strong> {court.type}</p>
-                <p><strong>Capacity:</strong> {court.capacity || 'Not specified'}</p>
-                <p><strong>Created:</strong> {formatDate(court.createdAt)}</p>
-                <p><strong>Updated:</strong> {formatDate(court.updatedAt)}</p>
               </div>
 
               <div className="court-actions">
